@@ -127,6 +127,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # Redirecciones automáticas para el Login
 LOGIN_REDIRECT_URL = 'home'
 LOGIN_URL = 'login'
+LOGOUT_REDIRECT_URL = 'home'
 
 # Email
 # https://docs.djangoproject.com/en/6.1/topics/email/#topic-email-configuration
