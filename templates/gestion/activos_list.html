@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}Inventario de Activos{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Inventario de Activos Tecnológicos</h2>
+</div>
+
+<div class="table-responsive bg-white p-3 rounded shadow-sm border">
+    <table class="table table-hover align-middle">
+        <thead class="table-dark">
+            <tr>
+                <th>Nombre</th>
+                <th>Tipo</th>
+                <th>Criticidad</th>
+                <th>IP / Ubicación</th>
+                <th>Fecha Registro</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for activo in activos %}
+            <tr>
+                <td class="fw-bold">{{ activo.nombre }}</td>
+                <td>{{ activo.get_tipo_display }}</td>
+                <td>
+                    {% if activo.criticidad == 'Alta' %}
+                        <span class="badge bg-danger">Alta</span>
+                    {% elif activo.criticidad == 'Media' %}
+                        <span class="badge bg-warning text-dark">Media</span>
+                    {% else %}
+                        <span class="badge bg-secondary">Baja</span>
+                    {% endif %}
+                </td>
+                <td><code>{{ activo.ubicacion_ip }}</code></td>
+                <td>{{ activo.fecha_registro|date:"d/m/Y H:i" }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" class="text-center text-muted py-4">No hay activos registrados todavía.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

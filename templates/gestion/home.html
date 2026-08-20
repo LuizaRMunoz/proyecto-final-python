@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}Inicio | Gestor de Activos e Incidentes{% endblock %}
+
+{% block content %}
+<div class="p-5 mb-4 bg-white rounded-3 shadow-sm border">
+    <div class="container-fluid py-3">
+        <h1 class="display-5 fw-bold text-dark">Gestor de Activos e Incidentes de Seguridad</h1>
+        <p class="col-md-10 fs-5 text-muted">
+            Bienvenido al sistema central de monitoreo de recursos tecnológicos y gestión de eventos de seguridad.
+        </p>
+    </div>
+</div>
+
+<div class="row text-center">
+    <div class="col-md-4 mb-3">
+        <div class="card border-primary mb-3 shadow-sm">
+            <div class="card-header bg-primary text-white font-weight-bold">Activos Registrados</div>
+            <div class="card-body">
+                <h2 class="card-title text-primary">{{ total_activos }}</h2>
+                <p class="card-text text-muted">Recursos informáticos inventariados.</p>
+                <a href="{% url 'lista_activos' %}" class="btn btn-outline-primary btn-sm">Ver Inventario</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-3">
+        <div class="card border-warning mb-3 shadow-sm">
+            <div class="card-header bg-warning text-dark font-weight-bold">Total Incidentes</div>
+            <div class="card-body">
+                <h2 class="card-title text-warning">{{ total_incidentes }}</h2>
+                <p class="card-text text-muted">Incidentes reportados en el sistema.</p>
+                <a href="{% url 'lista_incidentes' %}" class="btn btn-outline-warning btn-sm">Ver Incidentes</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-3">
+        <div class="card border-danger mb-3 shadow-sm">
+            <div class="card-header bg-danger text-white font-weight-bold">Incidentes Abiertos</div>
+            <div class="card-body">
+                <h2 class="card-title text-danger">{{ incidentes_abiertos }}</h2>
+                <p class="card-text text-muted">Requieren atención e investigación inmediata.</p>
+                <a href="{% url 'lista_incidentes' %}" class="btn btn-outline-danger btn-sm">Revisar Casos</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

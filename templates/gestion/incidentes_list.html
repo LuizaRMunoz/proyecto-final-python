@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}Registro de Incidentes{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Registro de Incidentes de Seguridad</h2>
+</div>
+
+<div class="table-responsive bg-white p-3 rounded shadow-sm border">
+    <table class="table table-hover align-middle">
+        <thead class="table-dark">
+            <tr>
+                <th>Título</th>
+                <th>Activo Afectado</th>
+                <th>Severidad</th>
+                <th>Estado</th>
+                <th>Reportado por</th>
+                <th>Fecha Reporte</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for incidente in incidentes %}
+            <tr>
+                <td class="fw-bold">{{ incidente.titulo }}</td>
+                <td>{{ incidente.activo_afectado.nombre }}</td>
+                <td>
+                    {% if incidente.severidad == 'Critico' or incidente.severidad == 'Alto' %}
+                        <span class="badge bg-danger">{{ incidente.severidad }}</span>
+                    {% else %}
+                        <span class="badge bg-warning text-dark">{{ incidente.severidad }}</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if incidente.estado == 'Abierto' %}
+                        <span class="badge bg-danger">Abierto</span>
+                    {% elif incidente.estado == 'En_Investigacion' %}
+                        <span class="badge bg-info text-dark">En Investigación</span>
+                    {% else %}
+                        <span class="badge bg-success">Resuelto/Cerrado</span>
+                    {% endif %}
+                </td>
+                <td>{{ incidente.reportado_por.username|default:"Anónimo" }}</td>
+                <td>{{ incidente.fecha_reporte|date:"d/m/Y H:i" }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" class="text-center text-muted py-4">No hay incidentes registrados en el sistema.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
