@@ -118,6 +118,15 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+# --- NUEVO: Configuración para archivos subidos por el usuario (Media) ---
+import os
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# Redirecciones automáticas para el Login
+LOGIN_REDIRECT_URL = 'home'
+LOGIN_URL = 'login'
 
 # Email
 # https://docs.djangoproject.com/en/6.1/topics/email/#topic-email-configuration
