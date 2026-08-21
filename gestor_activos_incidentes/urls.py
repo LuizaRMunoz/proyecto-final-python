@@ -18,15 +18,12 @@ from django.contrib import admin
 from django.urls import path, include 
 from django.conf import settings
 from django.conf.urls.static import static
-from gestion import views as gestion_views
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', gestion_views.home, name='home'),  # Página de inicio
-    path('activos/', gestion_views.lista_activos, name='lista_activos'), 
-    path('incidentes/', gestion_views.lista_incidentes, name='lista_incidentes'),
     path('usuarios/', include('usuarios.urls')), #Se conectan las apps de usuarios
+    path('', include('gestion.urls')), #Se conectan las urls de la app de gestión
 ]
 
 # Esto permite que Django sirva las imágenes multimedia durante el desarrollo local

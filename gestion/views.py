@@ -1,7 +1,9 @@
 from django.http import request
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from .models import Activo, Incidente
+from django.contrib import messages
+from .forms import ActivoForm, IncidenteForm
 
 # Create your views here.
 @login_required # Proteger el inicio
@@ -19,11 +21,30 @@ def home(request):
 
 @login_required # Proteger la vista de activos
 def lista_activos(request):
-    activos = Activo.objects.all()
-    return render(request, 'gestion/activos_list.html', {'activos': activos})
+    if request.method == 'POST':
+        form = ActivoForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, '¡Activo registrado correctamente!')
+            return redirect('lista_activos')
+    else:
+        form = ActivoForm()
 
-@login_required # Proteger la vista de incidentes
+    activos = Activo.objects.all()
+    return render(request, 'gestion/activos_list.html', {'activos': activos, 'form': form})
+
+@login_required
 def lista_incidentes(request):
+    if request.method == 'POST':
+        form = IncidenteForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, '¡Incidente reportado con éxito!')
+            return redirect('lista_incidentes')
+    else:
+        form = IncidenteForm()
+
     incidentes = Incidente.objects.all()
-    return render(request, 'gestion/incidentes_list.html', {'incidentes': incidentes})
+    return render(request, 'gestion/incidentes_list.html', {'incidentes': incidentes, 'form': form})
+
 

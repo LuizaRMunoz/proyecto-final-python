@@ -4,43 +4,66 @@
 
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h2>Inventario de Activos Tecnológicos</h2>
+    <h2>Inventario de Activos</h2>
+    <!-- Botón que abre el Modal -->
+    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalActivo">
+        + Nuevo Activo
+    </button>
 </div>
 
-<div class="table-responsive bg-white p-3 rounded shadow-sm border">
-    <table class="table table-hover align-middle">
-        <thead class="table-dark">
-            <tr>
-                <th>Nombre</th>
-                <th>Tipo</th>
-                <th>Criticidad</th>
-                <th>IP / Ubicación</th>
-                <th>Fecha Registro</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for activo in activos %}
-            <tr>
-                <td class="fw-bold">{{ activo.nombre }}</td>
-                <td>{{ activo.get_tipo_display }}</td>
-                <td>
-                    {% if activo.criticidad == 'Alta' %}
-                        <span class="badge bg-danger">Alta</span>
-                    {% elif activo.criticidad == 'Media' %}
-                        <span class="badge bg-warning text-dark">Media</span>
-                    {% else %}
-                        <span class="badge bg-secondary">Baja</span>
-                    {% endif %}
-                </td>
-                <td><code>{{ activo.ubicacion_ip }}</code></td>
-                <td>{{ activo.fecha_registro|date:"d/m/Y H:i" }}</td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="5" class="text-center text-muted py-4">No hay activos registrados todavía.</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+<!-- Tabla de Activos -->
+<div class="card shadow-sm">
+    <div class="card-body p-0">
+        <table class="table table-striped table-hover mb-0">
+            <thead class="table-dark">
+                <tr>
+                    <th>Nombre</th>
+                    <th>Tipo</th>
+                    <th>Criticidad</th>
+                    <th>Ubicación / IP</th>
+                    <th>Fecha Registro</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for activo in activos %}
+                    <tr>
+                        <td><strong>{{ activo.nombre }}</strong></td>
+                        <td>{{ activo.get_tipo_display }}</td>
+                        <td>{{ activo.get_criticidad_display }}</td>
+                        <td>{{ activo.ubicacion_ip }}</td>
+                        <td>{{ activo.fecha_creacion|date:"d/m/Y H:i" }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center text-muted py-4">
+                            No hay activos registrados todavía.
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal (Ventana emergente con el Formulario) -->
+<div class="modal fade" id="modalActivo" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">Registrar Nuevo Activo</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="POST">
+                <div class="modal-body">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-success">Guardar Activo</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 {% endblock %}
