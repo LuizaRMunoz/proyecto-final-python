@@ -10,12 +10,17 @@
                 <h4 class="mb-0">Iniciar Sesión</h4>
             </div>
             <div class="card-body">
+                    <!-- NUEVO: Bloque para mostrar errores de inicio de sesión -->
+                    {% if form.errors %}
+                        <div class="alert alert-danger">
+                            <strong>¡Error de acceso!</strong> Usuario y/o contraseña incorrectos. Verifica tus datos e intenta nuevamente.
+                        </div>
+                    {% endif %}
+                    <!-- FIN NUEVO -->
                 <form method="POST">
-                    {% csrf_token %}
-                    
-                    {{ form.as_p }}
-                    
-                    <button type="submit" class="btn btn-dark w-100 mt-3">Ingresar al Sistema</button>
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-dark w-100 mt-3">Ingresar al Sistema</button>
                 </form>
             </div>
         </div>
