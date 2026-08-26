@@ -1,47 +1,46 @@
 {% extends 'base.html' %}
 
-{% block title %}Inicio | Gestor de Activos e Incidentes{% endblock %}
+{% block title %}Inicio - Dashboard{% endblock %}
 
 {% block content %}
-<div class="p-5 mb-4 bg-white rounded-3 shadow-sm border">
-    <div class="container-fluid py-3">
-        <h1 class="display-5 fw-bold text-dark">Gestor de Activos e Incidentes de Seguridad</h1>
-        <p class="col-md-10 fs-5 text-muted">
-            Bienvenido al sistema central de monitoreo de recursos tecnológicos y gestión de eventos de seguridad.
+<!-- Bienvenida -->
+<div class="p-4 mb-4 bg-white rounded-3 shadow-sm border">
+    <div class="container-fluid py-2">
+        <h1 class="display-6 fw-bold">🛡️ Panel de Control</h1>
+        <p class="col-md-8 fs-5 text-muted mb-0">
+            Bienvenido/a, <strong>{{ user.get_full_name|default:user.username }}</strong>. Sistema centralizado de gestión de activos e incidentes de seguridad.
         </p>
     </div>
 </div>
 
-<div class="row text-center">
-    <div class="col-md-4 mb-3">
-        <div class="card border-primary mb-3 shadow-sm">
-            <div class="card-header bg-primary text-white font-weight-bold">Activos Registrados</div>
+<!-- Tarjetas de Métricas -->
+<div class="row g-4 mb-4">
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm bg-primary text-white h-100">
             <div class="card-body">
-                <h2 class="card-title text-primary">{{ total_activos }}</h2>
-                <p class="card-text text-muted">Recursos informáticos inventariados.</p>
-                <a href="{% url 'lista_activos' %}" class="btn btn-outline-primary btn-sm">Ver Inventario</a>
+                <h6 class="card-title text-uppercase fw-bold text-white-50">Total Activos</h6>
+                <h2 class="display-4 fw-bold my-2">{{ total_activos }}</h2>
+                <a href="{% url 'lista_activos' %}" class="btn btn-sm btn-light mt-2 text-primary fw-bold">Ver Inventario →</a>
             </div>
         </div>
     </div>
 
-    <div class="col-md-4 mb-3">
-        <div class="card border-warning mb-3 shadow-sm">
-            <div class="card-header bg-warning text-dark font-weight-bold">Total Incidentes</div>
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm bg-danger text-white h-100">
             <div class="card-body">
-                <h2 class="card-title text-warning">{{ total_incidentes }}</h2>
-                <p class="card-text text-muted">Incidentes reportados en el sistema.</p>
-                <a href="{% url 'lista_incidentes' %}" class="btn btn-outline-warning btn-sm">Ver Incidentes</a>
+                <h6 class="card-title text-uppercase fw-bold text-white-50">Total Incidentes</h6>
+                <h2 class="display-4 fw-bold my-2">{{ total_incidentes }}</h2>
+                <a href="{% url 'lista_incidentes' %}" class="btn btn-sm btn-light mt-2 text-danger fw-bold">Ver Reportes →</a>
             </div>
         </div>
     </div>
 
-    <div class="col-md-4 mb-3">
-        <div class="card border-danger mb-3 shadow-sm">
-            <div class="card-header bg-danger text-white font-weight-bold">Incidentes Abiertos</div>
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm bg-dark text-white h-100">
             <div class="card-body">
-                <h2 class="card-title text-danger">{{ incidentes_abiertos }}</h2>
-                <p class="card-text text-muted">Requieren atención e investigación inmediata.</p>
-                <a href="{% url 'lista_incidentes' %}" class="btn btn-outline-danger btn-sm">Revisar Casos</a>
+                <h6 class="card-title text-uppercase fw-bold text-white-50">Mi Cuenta</h6>
+                <p class="small text-white-50 mb-3">Gestioná tus datos personales e imagen de perfil.</p>
+                <a href="{% url 'perfil' %}" class="btn btn-sm btn-outline-light mt-2 fw-bold">Ir a Mi Perfil 👤</a>
             </div>
         </div>
     </div>

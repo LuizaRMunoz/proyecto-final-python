@@ -28,13 +28,17 @@
                 </ul>
                 <ul class="navbar-nav">
                     {% if user.is_authenticated %}
-                        <li class="nav-item">
-                            <span class="nav-link text-light me-2">Hola, {{ user.username }}</span>
+                        <li class="nav-item me-3">
+                            <!-- Enlace a la sección de perfil -->
+                            <a href="{% url 'perfil' %}" class="text-light text-decoration-none">
+                                Hola, <strong>{{ user.username }}</strong> 👤
+                            </a>
                         </li>
                             <li class="nav-item">
                             <form method="post" action="{% url 'logout' %}" class="d-inline">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-outline-danger btn-sm mt-1">Cerrar Sesión</button>
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-danger btn-sm mt-1">Cerrar Sesión</button>
+                            </form>
                             </form>
                         </li>
                     {% else %}
