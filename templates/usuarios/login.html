@@ -1,29 +1,115 @@
 {% extends 'base.html' %}
 
-{% block title %}Iniciar Sesión{% endblock %}
+{% block title %}Iniciar Sesión - SecManager{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-5">
-        <div class="card shadow-sm mt-5">
-            <div class="card-header bg-dark text-white">
-                <h4 class="mb-0">Iniciar Sesión</h4>
+<style>
+    /* Estilos personalizados para la tarjeta de Login */
+    .login-card {
+        border-radius: 18px;
+        border: none;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.18), 0 5px 15px rgba(44, 87, 69, 0.15);
+        overflow: hidden;
+    }
+
+    /* Estilización de los inputs de Django */
+    .login-card input[type="text"],
+    .login-card input[type="password"] {
+        width: 100%;
+        padding: 12px 16px;
+        border-radius: 10px;
+        border: 1.5px solid #d1d5db;
+        font-size: 0.95rem;
+        background-color: #f9fafb;
+        transition: all 0.25s ease;
+    }
+
+    .login-card input[type="text"]:focus,
+    .login-card input[type="password"]:focus {
+        border-color: #2C5745;
+        background-color: #ffffff;
+        box-shadow: 0 0 0 4px rgba(44, 87, 69, 0.15);
+        outline: none;
+    }
+
+    .login-card label {
+        font-weight: 600;
+        color: #2C5745;
+        margin-bottom: 6px;
+        display: block;
+        font-size: 0.9rem;
+    }
+
+    /* Botón animado con color corporativo */
+    .btn-login {
+        background-color: #2C5745;
+        color: #ffffff;
+        border: none;
+        border-radius: 10px;
+        padding: 12px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.2s ease;
+    }
+
+    .btn-login:hover {
+        background-color: #214335;
+        color: #ffffff;
+        transform: scale(1.04);
+        box-shadow: 0 8px 20px rgba(44, 87, 69, 0.35);
+    }
+</style>
+
+<!-- Contenedor con padding amplio (py-5 my-4) para despegar el footer -->
+<div class="row justify-content-center py-5 my-4">
+    <div class="col-md-6 col-lg-5 col-xl-4">
+        
+        <div class="card login-card">
+            <!-- Encabezado con color #2C5745 y mensaje más cercano -->
+            <div class="card-header text-white text-center py-4 px-3" style="background-color: #2C5745;">
+                <h3 class="fw-bold mb-1">¡Hola de nuevo! 👋</h3>
+                <p class="mb-0 text-white-50 small">Ingresá tus datos para acceder al sistema</p>
             </div>
-            <div class="card-body">
-                    <!-- NUEVO: Bloque para mostrar errores de inicio de sesión -->
-                    {% if form.errors %}
-                        <div class="alert alert-danger">
-                            <strong>¡Error de acceso!</strong> Usuario y/o contraseña incorrectos. Verifica tus datos e intenta nuevamente.
-                        </div>
-                    {% endif %}
-                    <!-- FIN NUEVO -->
+
+            <div class="card-body p-4 p-md-5">
+                
+                {% if form.errors %}
+                    <div class="alert alert-danger py-2 px-3 small rounded-3 mb-4">
+                        ⚠️ Usuario o contraseña incorrectos. Por favor, verificá tus datos.
+                    </div>
+                {% endif %}
+
                 <form method="POST">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <button type="submit" class="btn btn-dark w-100 mt-3">Ingresar al Sistema</button>
+                    {% csrf_token %}
+                    
+                    <div class="mb-3 text-start">
+                        <label for="{{ form.username.id_for_label }}">Usuario</label>
+                        {{ form.username }}
+                    </div>
+
+                    <div class="mb-4 text-start">
+                        <label for="{{ form.password.id_for_label }}">Contraseña</label>
+                        {{ form.password }}
+                    </div>
+
+                    <button type="submit" class="btn btn-login w-100 mt-2">
+                        Ingresar al Sistema
+                    </button>
                 </form>
+
             </div>
+            
+            <div class="card-footer text-center py-3 bg-light border-0">
+                <small class="text-muted">
+                    ¿No tenés cuenta todavía? 
+                    <a href="{% url 'registro' %}" class="fw-bold text-decoration-none" style="color: #2C5745;">
+                        Registrate acá
+                    </a>
+                </small>
+            </div>
+            
         </div>
+
     </div>
 </div>
 {% endblock %}

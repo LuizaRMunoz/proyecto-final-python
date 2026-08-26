@@ -6,18 +6,20 @@ from django.contrib import messages
 from .forms import ActivoForm, IncidenteForm
 
 # Create your views here.
-@login_required # Proteger el inicio
 def home(request):
-    total_activos = Activo.objects.count()
-    total_incidentes = Incidente.objects.count()
-    incidentes_abiertos = Incidente.objects.filter(estado='Abierto').count()
+    if request.user.is_authenticated:
+        total_activos = Activo.objects.count()
+        total_incidentes = Incidente.objects.count()
+        incidentes_abiertos = Incidente.objects.filter(estado='Abierto').count()
 
-    context = {
-        'total_activos': total_activos,
-        'total_incidentes': total_incidentes,
-        'incidentes_abiertos': incidentes_abiertos,
-    }
-    return render(request, 'gestion/home.html', context)
+        context = {
+            'total_activos': total_activos,
+            'total_incidentes': total_incidentes,
+            'incidentes_abiertos': incidentes_abiertos,
+        }
+        return render(request, 'gestion/home.html', context)
+    else:
+        return render(request, 'gestion/landing.html')
 
 @login_required # Proteger la vista de activos
 def lista_activos(request):
@@ -33,7 +35,7 @@ def lista_activos(request):
     activos = Activo.objects.all()
     return render(request, 'gestion/activos_list.html', {'activos': activos, 'form': form})
 
-@login_required
+@login_required # Proteger la vista de incidentes
 def lista_incidentes(request):
     if request.method == 'POST':
         form = IncidenteForm(request.POST)

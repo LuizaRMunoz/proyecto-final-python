@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% block title %}SecManager - Control Total de Activos e Incidentes{% endblock %}
+
+{% block content %}
+<!-- ESTILOS MÁGICOS -->
+<style>
+    /* Efecto Zoom suave para botones */
+    .btn-animado {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .btn-animado:hover {
+        transform: scale(1.08);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+
+    /* Efecto Fade-In (Aparecer desde abajo) */
+    .fade-scroll {
+        opacity: 0;
+        transform: translateY(40px);
+        transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    }
+    .fade-scroll.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+</style>
+
+<!-- Hero Banner (Con tu color personalizado) -->
+<div class="text-white rounded-3 p-5 mb-5 shadow text-center position-relative overflow-hidden" style="background-color: #2E2910;">
+    <div class="py-5 my-3">
+        <h1 class="display-3 fw-bold mb-3">🛡️ SecManager</h1>
+        <p class="fs-4 text-light col-md-8 mx-auto mb-4">
+            La plataforma centralizada para auditar tus activos tecnológicos y gestionar incidentes de ciberseguridad en tiempo real.
+        </p>
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+            <!-- Botones con clase btn-animado -->
+            <a href="{% url 'registro' %}" class="btn btn-primary btn-lg px-4 me-sm-3 fw-bold btn-animado">Crear una Cuenta Gratis</a>
+            <a href="{% url 'login' %}" class="btn btn-outline-light btn-lg px-4 btn-animado">Iniciar Sesión</a>
+        </div>
+    </div>
+</div>
+
+<!-- Tarjetas explicativas con Fade-In y tu color de fondo -->
+<div class="row g-4 py-3 mb-5">
+    <div class="col-md-4">
+        <!-- Tarjeta 1 -->
+        <div class="card h-100 border-0 shadow text-center p-3 fade-scroll" style="background-color: #EBE3A7; color: #2E2910;">
+            <div class="card-body">
+                <div class="fs-1 mb-3">🖥️</div>
+                <h4 class="card-title fw-bold mb-3">Inventario de Activos</h4>
+                <p class="card-text opacity-75">
+                    Catálogo completo de servidores, bases de datos y dispositivos. Clasificá por criticidad, tipo y ubicación IP de forma estructurada.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <!-- Tarjeta 2 -->
+        <div class="card h-100 border-0 shadow text-center p-3 fade-scroll" style="background-color: #EBE3A7; color: #2E2910;" style="transition-delay: 0.2s;">
+            <div class="card-body">
+                <div class="fs-1 mb-3">🚨</div>
+                <h4 class="card-title fw-bold mb-3">Registro de Incidentes</h4>
+                <p class="card-text opacity-75">
+                    Reportá y da seguimiento a eventos de seguridad vinculados a tus activos. Mantené control sobre estados, severidad y responsables.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <!-- Tarjeta 3 -->
+        <div class="card h-100 border-0 shadow text-center p-3 fade-scroll" style="background-color: #EBE3A7; color: #2E2910;" style="transition-delay: 0.4s;">
+            <div class="card-body">
+                <div class="fs-1 mb-3">📊</div>
+                <h4 class="card-title fw-bold mb-3">Métricas en Vivo</h4>
+                <p class="card-text opacity-75">
+                    Accedé a un panel de control con indicadores instantáneos para tomar decisiones rápidas ante cualquier amenaza o vulnerabilidad.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SCRIPT para activar el Fade-In al bajar la página -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.2 }); /* 0.2 significa que se activa cuando se ve el 20% de la tarjeta */
+
+        document.querySelectorAll('.fade-scroll').forEach((el) => {
+            observer.observe(el);
+        });
+    });
+</script>
+{% endblock %}
