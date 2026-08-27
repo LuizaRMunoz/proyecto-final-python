@@ -1,42 +1,128 @@
 {% extends 'base.html' %}
 
-{% block title %}Registro de Usuario{% endblock %}
+{% block title %}Crear Cuenta - SecManager{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-6">
-        <div class="card shadow-sm mt-4">
-            <div class="card-header bg-primary text-white">
-                <h4 class="mb-0">Crear una Cuenta</h4>
+<style>
+    /* Estilos personalizados para la tarjeta de Registro */
+    .register-card {
+        border-radius: 18px;
+        border: none;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.18), 0 5px 15px rgba(44, 87, 69, 0.15);
+        overflow: hidden;
+    }
+
+    /* Estilización de los inputs de Django */
+    .register-card input[type="text"],
+    .register-card input[type="email"],
+    .register-card input[type="password"] {
+        width: 100%;
+        padding: 12px 16px;
+        border-radius: 10px;
+        border: 1.5px solid #d1d5db;
+        font-size: 0.95rem;
+        background-color: #f9fafb;
+        transition: all 0.25s ease;
+    }
+
+    .register-card input[type="text"]:focus,
+    .register-card input[type="email"]:focus,
+    .register-card input[type="password"]:focus {
+        border-color: #12544F;
+        background-color: #ffffff;
+        box-shadow: 0 0 0 4px rgba(44, 87, 69, 0.15);
+        outline: none;
+    }
+
+    .register-card label {
+        font-weight: 600;
+        color: #12544F;
+        margin-bottom: 4px;
+        display: block;
+        font-size: 0.9rem;
+    }
+
+    .helptext {
+        display: block;
+        font-size: 0.78rem;
+        color: #6b7280;
+        margin-top: 4px;
+        margin-bottom: 12px;
+    }
+
+    /* Botón animado con color corporativo */
+    .btn-register {
+        background-color: #12544F;
+        color: #ffffff;
+        border: none;
+        border-radius: 10px;
+        padding: 12px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.2s ease;
+    }
+
+    .btn-register:hover {
+        background-color: #12544F;
+        color: #ffffff;
+        transform: scale(1.03);
+        box-shadow: 0 8px 20px rgba(44, 87, 69, 0.35);
+    }
+</style>
+
+<!-- Espaciado vertical (py-5 my-4) para despegar del footer -->
+<div class="row justify-content-center py-5 my-4">
+    <div class="col-md-8 col-lg-6 col-xl-5">
+        
+        <div class="card register-card">
+            <!-- Encabezado con color #2C5745 -->
+            <div class="card-header text-white text-center py-4 px-3" style="background-color: #12544F;">
+                <h3 class="fw-bold mb-1">¡Sumate a SecManager! 🚀</h3>
+                <p class="mb-0 text-white-50 small">Completá tus datos para crear una nueva cuenta</p>
             </div>
-            <div class="card-body">
-                    <!--Bloque para mostrar errores de registro -->
-                    {% if form.errors %}
-                        <div class="alert alert-danger pb-0">
-                            <strong>¡Atención! Por favor corrige lo siguiente:</strong>
-                            <ul>
-                                {% for field in form %}
-                                    {% for error in field.errors %}
-                                        <li>{{ field.label }}: {{ error }}</li>
-                                    {% endfor %}
-                                {% endfor %}
-                                {% for error in form.non_field_errors %}
-                                    <li>{{ error }}</li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-                    {% endif %}
-                <!-- FIN DEL BLOQUE -->
+
+            <div class="card-body p-4 p-md-5 text-start">
+                
+                {% if form.errors %}
+                    <div class="alert alert-danger py-2 px-3 small rounded-3 mb-4">
+                        ⚠️ Por favor, corregí los errores indicados abajo.
+                    </div>
+                {% endif %}
+
                 <form method="POST">
                     {% csrf_token %}
-                    {{ form.as_p }}
-                    <button type="submit" class="btn btn-primary w-100 mt-3">Registrarse</button>
+                    
+                    {% for field in form %}
+                        <div class="mb-3">
+                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {{ field }}
+                            {% if field.help_text %}
+                                <span class="helptext">{{ field.help_text|safe }}</span>
+                            {% endif %}
+                            {% for error in field.errors %}
+                                <div class="text-danger small fw-bold mt-1">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+
+                    <button type="submit" class="btn btn-register w-100 mt-3">
+                        Registrarse
+                    </button>
                 </form>
+
             </div>
-            <div class="card-footer text-center">
-                <small>¿Ya tienes cuenta? <a href="{% url 'login' %}">Inicia sesión aquí</a></small>
+            
+            <div class="card-footer text-center py-3 bg-light border-0">
+                <small class="text-muted">
+                    ¿Ya tenés cuenta? 
+                    <a href="{% url 'login' %}" class="fw-bold text-decoration-none" style="color: #2C5745;">
+                        Iniciá sesión acá
+                    </a>
+                </small>
             </div>
+            
         </div>
+
     </div>
 </div>
 {% endblock %}

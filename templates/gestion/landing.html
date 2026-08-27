@@ -5,13 +5,34 @@
 {% block content %}
 <!-- ESTILOS MÁGICOS -->
 <style>
-    /* Efecto Zoom suave para botones */
+
+    /* Tipografía de Título Principal */
+    .hero-title {
+        font-size: clamp(2.4rem, 5.5vw, 4.2rem);
+        line-height: 1.1;
+        font-weight: 800;
+        letter-spacing: -1px;
+    }
+
+    /* Animaciones y botones */
     .btn-animado {
         transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
     .btn-animado:hover {
-        transform: scale(1.08);
-        box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        transform: translateY(-3px) scale(1.03);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+    }
+
+    /* Íconos Geométricos Flotantes */
+    .geo-shape {
+        display: inline-block;
+        margin: 0 8px;
+        opacity: 0.8;
+        animation: float 4s ease-in-out infinite alternate;
+    }
+    @keyframes float {
+        0% { transform: translateY(0px); }
+        100% { transform: translateY(-8px); }
     }
 
     /* Efecto Fade-In (Aparecer desde abajo) */
@@ -24,62 +45,169 @@
         opacity: 1;
         transform: translateY(0);
     }
+
+    /* Cajas Contenedoras de Imágenes Demostrativas */
+    .img-placeholder-box {
+        border-radius: 18px;
+        border: 2px dashed rgba(255, 255, 255, 0.4);
+        background: rgba(0, 0, 0, 0.15);
+        min-height: 300px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 12px 30px rgba(0,0,0,0.18);
+        overflow: hidden;
+        transition: transform 0.3s ease;
+    }
+
+    .img-placeholder-box-dark {
+        border-color: rgba(46, 41, 16, 0.3);
+        background: rgba(255, 255, 255, 0.25);
+    }
+
+    .img-placeholder-box:hover {
+        transform: scale(1.02);
+    }
 </style>
 
-<!-- Hero Banner (Con tu color personalizado) -->
-<div class="text-white rounded-3 p-5 mb-5 shadow text-center position-relative overflow-hidden" style="background-color: #2E2910;">
-    <div class="py-5 my-3">
-        <h1 class="display-3 fw-bold mb-3">🛡️ SecManager</h1>
-        <p class="fs-4 text-light col-md-8 mx-auto mb-4">
-            La plataforma centralizada para auditar tus activos tecnológicos y gestionar incidentes de ciberseguridad en tiempo real.
+<!-- Hero Banner -->
+<div class="text-white rounded-4 p-4 p-md-5 mb-5 shadow-lg position-relative overflow-hidden text-center" style="background-color: #092328;">
+    <div class="py-4 my-2">
+        <!-- Elementos Geométricos Sutiles -->
+        <div class="mb-4">
+            <span class="geo-shape">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#EBE3A7" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/></svg>
+            </span>
+            <span class="geo-shape" style="animation-delay: 0.6s;">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#EBE3A7" stroke-width="1.8"><polygon points="12 2 22 22 2 22"/></svg>
+            </span>
+            <span class="geo-shape" style="animation-delay: 1.2s;">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#EBE3A7" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+            </span>
+        </div>
+        <h1 class="hero-title font-syne mb-4">
+            Gestioná tus <span style="color: #EBE3A7;">activos</span><br>
+            e incidentes hoy mismo
+        </h1>
+
+        <p class="fs-5 text-white-50 col-md-7 mx-auto mb-5">
+            Plataforma centralizada para auditación de infraestructura y respuesta a vulnerabilidades en tiempo real.
         </p>
-        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-            <!-- Botones con clase btn-animado -->
-            <a href="{% url 'registro' %}" class="btn btn-primary btn-lg px-4 me-sm-3 fw-bold btn-animado">Crear una Cuenta Gratis</a>
-            <a href="{% url 'login' %}" class="btn btn-outline-light btn-lg px-4 btn-animado">Iniciar Sesión</a>
+
+        <!-- Botones Principales -->
+        <div class="d-flex justify-content-center gap-3">
+            <a href="{% url 'registro' %}" class="btn btn-lg px-4 py-3 fw-bold rounded-pill text-dark btn-animado" style="background-color: #EBE3A7;">
+                Comenzar Gratis →
+            </a>
+            <a href="{% url 'login' %}" class="btn btn-outline-light btn-lg px-4 py-3 rounded-pill btn-animado">
+                Iniciar Sesión
+            </a>
         </div>
     </div>
 </div>
 
-<!-- Tarjetas explicativas con Fade-In y tu color de fondo -->
-<div class="row g-4 py-3 mb-5">
-    <div class="col-md-4">
+<!-- Tarjetas explicativas con Fade-In -->
+<div class="rounded-4 p-4 p-md-5 mb-5 shadow-lg text-white fade-scroll" style="background-color: #2A835F;">
+    <div class="row align-items-center g-5">
         <!-- Tarjeta 1 -->
-        <div class="card h-100 border-0 shadow text-center p-3 fade-scroll" style="background-color: #EBE3A7; color: #2E2910;">
-            <div class="card-body">
-                <div class="fs-1 mb-3">🖥️</div>
-                <h4 class="card-title fw-bold mb-3">Inventario de Activos</h4>
-                <p class="card-text opacity-75">
-                    Catálogo completo de servidores, bases de datos y dispositivos. Clasificá por criticidad, tipo y ubicación IP de forma estructurada.
-                </p>
+        <div class="col-lg-6">
+            <span class="badge rounded-pill px-3 py-2 mb-3 fs-6" style="background-color: rgba(235, 227, 167, 0.2); color: #EBE3A7;">
+                🖥️ Módulo de Activos
+            </span>
+            <h2 class="font-syne fw-bold display-5 mb-3">Inventario Inteligente de Activos</h2>
+            <p class="fs-5 opacity-90 mb-4">
+                Mantené un catálogo estructurado de toda la infraestructura tecnológica de tu organización en un solo lugar.
+            </p>
+            <ul class="list-unstyled fs-6 mb-0">
+                <li class="mb-2">✔️ Categorizá servidores, bases de datos y dispositivos de red.</li>
+                <li class="mb-2">✔️ Asigná niveles de criticidad e identificá ubicaciones IP al instante.</li>
+                <li class="mb-2">✔️ Mantené control completo del estado y responsables de cada equipo.</li>
+            </ul>
+        </div>
+
+    <div class="col-lg-6">
+            <div class="img-placeholder-box">
+                <!-- 
+                    PARA AGREGAR TU IMAGEN:
+                    Reemplazá el bloque <div> interno por tu etiqueta <img>, por ejemplo:
+                    <img src="/static/img/activos-demo.png" class="img-fluid rounded-4 shadow" alt="Demo Activos">
+                -->
+                <div class="text-center p-4">
+                    <span class="fs-1 mb-2 d-block">🖥️</span>
+                    <h5 class="fw-bold mb-1">Imagen de Inventario de Activos</h5>
+                    <small class="opacity-75">Insertá aquí la captura del módulo de activos</small>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="col-md-4">
+    </div>
+</div>
         <!-- Tarjeta 2 -->
-        <div class="card h-100 border-0 shadow text-center p-3 fade-scroll" style="background-color: #EBE3A7; color: #2E2910;" style="transition-delay: 0.2s;">
-            <div class="card-body">
-                <div class="fs-1 mb-3">🚨</div>
-                <h4 class="card-title fw-bold mb-3">Registro de Incidentes</h4>
-                <p class="card-text opacity-75">
-                    Reportá y da seguimiento a eventos de seguridad vinculados a tus activos. Mantené control sobre estados, severidad y responsables.
-                </p>
+<div class="rounded-4 p-4 p-md-5 mb-5 shadow-lg text-white fade-scroll" style="background-color: #8BBB92;">
+    <div class="row align-items-center g-5">
+        <div class="col-lg-6">
+            <span class="badge rounded-pill px-3 py-2 mb-3 fs-6" style="background-color: #2E2910; color: #EBE3A7;">
+                🚨 Módulo de Ciberseguridad
+            </span>
+            <h2 class="font-syne fw-bold display-5 mb-3">Gestión y Control de Incidentes</h2>
+            <p class="fs-5 opacity-90 mb-4">
+                Reportá y da seguimiento a eventos de seguridad vinculando cada hallazgo directamente con los activos afectados.
+            </p>
+            <ul class="list-unstyled fs-6 mb-0">
+                <li class="mb-2">📌 Clasificación clara según severidad (Baja, Media, Alta, Crítica).</li>
+                <li class="mb-2">📌 Seguimiento de estados desde la apertura hasta la resolución.</li>
+                <li class="mb-2">📌 Asignación rápida de responsables para agilizar la respuesta.</li>
+            </ul>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="img-placeholder-box img-placeholder-box-dark">
+                <!-- 
+                    PARA AGREGAR TU IMAGEN:
+                    Reemplazá el bloque <div> interno por tu etiqueta <img>:
+                    <img src="/static/img/incidentes-demo.png" class="img-fluid rounded-4 shadow" alt="Demo Incidentes">
+                -->
+                <div class="text-center p-4">
+                    <span class="fs-1 mb-2 d-block">🚨</span>
+                    <h5 class="fw-bold mb-1">Imagen de Registro de Incidentes</h5>
+                    <small class="opacity-75">Insertá aquí la captura del módulo de incidentes</small>
+                </div>
             </div>
         </div>
     </div>
-
-    <div class="col-md-4">
+</div>
         <!-- Tarjeta 3 -->
-        <div class="card h-100 border-0 shadow text-center p-3 fade-scroll" style="background-color: #EBE3A7; color: #2E2910;" style="transition-delay: 0.4s;">
-            <div class="card-body">
-                <div class="fs-1 mb-3">📊</div>
-                <h4 class="card-title fw-bold mb-3">Métricas en Vivo</h4>
-                <p class="card-text opacity-75">
-                    Accedé a un panel de control con indicadores instantáneos para tomar decisiones rápidas ante cualquier amenaza o vulnerabilidad.
-                </p>
+<div class="rounded-4 p-4 p-md-5 mb-5 shadow-lg text-white fade-scroll" style="background-color: #2A835F;">
+    <div class="row align-items-center g-5">
+        <div class="col-lg-6">
+            <span class="badge rounded-pill px-3 py-2 mb-3 fs-6" style="background-color: rgba(235, 227, 167, 0.2); color: #EBE3A7;">
+                📊 Panel de Control
+            </span>
+            <h2 class="font-syne fw-bold display-5 mb-3">Métricas e Indicadores en Vivo</h2>
+            <p class="fs-5 opacity-90 mb-4">
+                Visualizá el estado general de tu ciberseguridad a través de indicadores analíticos en tiempo real.
+            </p>
+            <ul class="list-unstyled fs-6 mb-0">
+                <li class="mb-2">📈 Tableros dinámicos de vulnerabilidades pendientes vs. resueltas.</li>
+                <li class="mb-2">📈 Métricas instantáneas para la toma de decisiones estratégicas.</li>
+                <li class="mb-2">📈 Reportes claros para auditorías e informes gerenciales.</li>
+            </ul>
+        </div>
+        <div class="col-lg-6">
+            <div class="img-placeholder-box">
+                <!-- 
+                    PARA AGREGAR TU IMAGEN:
+                    Reemplazá el bloque <div> interno por tu etiqueta <img>:
+                    <img src="/static/img/metricas-demo.png" class="img-fluid rounded-4 shadow" alt="Demo Métricas">
+                -->
+                <div class="text-center p-4">
+                    <span class="fs-1 mb-2 d-block">📊</span>
+                    <h5 class="fw-bold mb-1">Imagen de Métricas en Vivo</h5>
+                    <small class="opacity-75">Insertá aquí la captura del dashboard de métricas</small>
+                </div>
             </div>
         </div>
+
     </div>
 </div>
 
@@ -92,7 +220,7 @@
                     entry.target.classList.add('visible');
                 }
             });
-        }, { threshold: 0.2 }); /* 0.2 significa que se activa cuando se ve el 20% de la tarjeta */
+        }, { threshold: 0.15 }); /* 0.15 significa que se activa cuando se ve el 15% de la tarjeta */
 
         document.querySelectorAll('.fade-scroll').forEach((el) => {
             observer.observe(el);
