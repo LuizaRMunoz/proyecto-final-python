@@ -30,6 +30,15 @@ class Activo(models.Model):
     def __str__(self):
         return f"{self.nombre} ({self.get_tipo_display()}) - Criticidad: {self.get_criticidad_display()}"
 
+class HistorialActivo(models.Model):
+    activo = models.ForeignKey(Activo, on_delete=models.CASCADE, related_name='historial')
+    usuario = models.ForeignKey(User, on_delete=models.SET_NULL, null=True) # Quién lo hizo
+    fecha_modificacion = models.DateTimeField(auto_now_add=True) # Cuándo lo hizo
+    descripcion = models.TextField() # Qué cambió y el motivo
+
+    def __str__(self):
+        return f"Modificación en {self.activo.nombre} - {self.fecha_modificacion.strftime('%d/%m/%Y')}"
+
 class Incidente(models.Model):
     NIVELES_SEVERIDAD = [
         ('Critico', 'Crítico'),
@@ -63,3 +72,12 @@ class Incidente(models.Model):
 
     def __str__(self):
         return f"[{self.severidad}] {self.titulo} - Estado: {self.get_estado_display()}"
+
+class HistorialIncidente(models.Model):
+    incidente = models.ForeignKey(Incidente, on_delete=models.CASCADE, related_name='historial')
+    usuario = models.ForeignKey(User, on_delete=models.SET_NULL, null=True) # Quién actualizó el caso
+    fecha_modificacion = models.DateTimeField(auto_now_add=True) # Cuándo lo hizo
+    comentario = models.TextField() # El relato de lo que se hizo y los campos que cambiaron
+
+    def __str__(self):
+        return f"Actualización en {self.incidente.titulo} - {self.fecha_modificacion.strftime('%d/%m/%Y')}"

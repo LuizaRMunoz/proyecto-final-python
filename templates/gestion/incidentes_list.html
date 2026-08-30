@@ -179,36 +179,149 @@
 <!-- Modales de Descripción para Incidentes -->
 {% for incidente in incidentes %}
 <div class="modal fade" id="modalDescIncidente{{ incidente.id }}" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg"> <!-- modal-lg lo hace un poco más ancho -->
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
             <div class="modal-header border-0 p-4" style="background-color: #12544F;">
                 <h5 class="modal-title font-syne fw-bold text-white">Reporte de Incidente</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+            
             <div class="modal-body p-4 p-md-5 bg-light">
                 <h3 class="fw-bold mb-4" style="color: #2E2910;">{{ incidente.titulo }}</h3>
                 
                 <div class="row mb-4">
                     <div class="col-md-6">
                         <p class="text-muted mb-1 small text-uppercase fw-bold">Activo Afectado</p>
-                        <p class="fs-5">{{ incidente.activo_afectado }}</p>
+                        <p class="fs-5">{{ incidente.activo_afectado.nombre }}</p>
                     </div>
                     <div class="col-md-6">
                         <p class="text-muted mb-1 small text-uppercase fw-bold">Fecha de Reporte</p>
                         <p class="fs-5">{{ incidente.fecha_reporte|date:"d/m/Y H:i" }}</p>
                     </div>
+                    <div class="col-md-6 mt-3">
+                        <p class="text-muted mb-1 small text-uppercase fw-bold">Estado Actual</p>
+                        <span class="badge bg-dark rounded-pill px-3 py-2">{{ incidente.get_estado_display }}</span>
+                    </div>
+                    <div class="col-md-6 mt-3">
+                        <p class="text-muted mb-1 small text-uppercase fw-bold">Severidad</p>
+                        <span class="badge bg-danger rounded-pill px-3 py-2">{{ incidente.get_severidad_display }}</span>
+                    </div>
                 </div>
 
-                <hr class="opacity-25 mb-4">
+                <hr class="opacity-25 mb-4 text-muted">
 
                 <h6 class="text-muted fw-bold mb-3 text-uppercase">Descripción de lo ocurrido:</h6>
-                <div class="bg-white p-4 rounded-3 shadow-sm border">
+                <div class="bg-white p-4 rounded-3 shadow-sm border mb-4">
                     <p class="text-dark mb-0" style="white-space: pre-line; font-size: 1.05rem;">{{ incidente.descripcion|default:"No hay detalles adicionales registrados." }}</p>
                 </div>
+                
+                <!-- Historial de Evolución del Incidente -->
+                <h6 class="text-muted fw-bold mb-3 mt-4 text-uppercase">🕒 Evolución del Caso:</h6>
+                
+                {% if incidente.historial.all %}
+                    <div class="list-group list-group-flush rounded-3 shadow-sm border">
+                    {% for registro in incidente.historial.all %}
+                        <div class="list-group-item bg-white p-3">
+                            <div class="d-flex w-100 justify-content-between mb-1">
+                                <small class="text-primary fw-bold">@{{ registro.usuario.username|default:"Sistema" }}</small>
+                                <small class="text-muted">{{ registro.fecha_modificacion|date:"d/m/Y H:i" }}</small>
+                            </div>
+                            <p class="mb-0 small text-dark">{{ registro.comentario }}</p>
+                        </div>
+                    {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="alert alert-light border text-muted small text-center mb-0">
+                        El incidente acaba de ser reportado. Aún no hay actualizaciones en la investigación.
+                    </div>
+                {% endif %}
+                
             </div>
+            
             <div class="modal-footer border-0 bg-light p-4 pt-0">
                 <button type="button" class="btn btn-outline-secondary rounded-pill px-4 fw-bold" data-bs-dismiss="modal">Cerrar</button>
+                
+                <!-- Botón que abre el modal de actualización -->
+                <button type="button" class="btn btn-sm btn-outline-primary rounded-pill shadow-sm mx-2" data-bs-toggle="modal" data-bs-target="#modalEditarIncidente{{ incidente.id }}" data-bs-dismiss="modal">
+                ✏️ Actualizar Caso
+                </button>
             </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal de Edición/Evolución de Incidente -->
+<div class="modal fade" id="modalEditarIncidente{{ incidente.id }}" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+            <div class="modal-header border-0 p-4" style="background-color: #2A835F;">
+                <h5 class="modal-title font-syne fw-bold text-white">✏️ Actualizar Incidente: {{ incidente.titulo }}</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            
+            <form method="POST" action="{% url 'editar_incidente' incidente.id %}">
+                {% csrf_token %}
+                <div class="modal-body p-4 bg-light">
+                    <div class="row g-3">
+                        <!-- Mantenemos el activo oculto para que no dé error de validación, pero que no lo puedan cambiar -->
+                        <input type="hidden" name="activo_afectado" value="{{ incidente.activo_afectado.id }}">
+                        
+                        <div class="col-md-12">
+                            <label class="form-label fw-bold">Título del Incidente</label>
+                            <input type="text" name="titulo" class="form-control" value="{{ incidente.titulo }}" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Estado de la Investigación</label>
+                            <select name="estado" class="form-select" required>
+                                <option value="Abierto" {% if incidente.estado == 'Abierto' %}selected{% endif %}>Abierto</option>
+                                <option value="En_Investigacion" {% if incidente.estado == 'En_Investigacion' %}selected{% endif %}>En Investigación</option>
+                                <option value="Resuelto" {% if incidente.estado == 'Resuelto' %}selected{% endif %}>Resuelto</option>
+                                <option value="Cerrado" {% if incidente.estado == 'Cerrado' %}selected{% endif %}>Cerrado</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Nivel de Severidad</label>
+                            <select name="severidad" class="form-select" required>
+                                <option value="Critico" {% if incidente.severidad == 'Critico' %}selected{% endif %}>Crítico</option>
+                                <option value="Alto" {% if incidente.severidad == 'Alto' %}selected{% endif %}>Alto</option>
+                                <option value="Medio" {% if incidente.severidad == 'Medio' %}selected{% endif %}>Medio</option>
+                                <option value="Bajo" {% if incidente.severidad == 'Bajo' %}selected{% endif %}>Bajo</option>
+                            </select>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label fw-bold">Descripción del Suceso</label>
+                            <textarea name="descripcion" class="form-control" rows="3" required>{{ incidente.descripcion }}</textarea>
+                        </div>
+
+                        <!-- Comentario Obligatorio (Registro) -->
+                        <div class="col-12 mt-4">
+                            <div class="bg-white p-3 rounded-3 border border-warning border-opacity-50 shadow-sm">
+                                <label class="form-label fw-bold text-dark">Comentario de Evolución <span class="text-danger">*</span></label>
+                                <input type="text" name="motivo_edicion" class="form-control border-warning" required placeholder="Ej: Se revisaron los logs y se pasa a investigación.">
+                                <div class="form-text text-muted small mt-2">
+                                    <i class="bi bi-info-circle"></i> Obligatorio. Este comentario quedará registrado en el historial del caso.
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Contraseña de seguridad -->
+                        <div class="col-12 mt-3">
+                            <div class="bg-white p-3 rounded-3 border border-danger border-opacity-25 shadow-sm">
+                                <label class="form-label fw-bold text-danger">Contraseña de Autorización <span class="text-danger">*</span></label>
+                                <input type="password" name="password_admin" class="form-control border-danger border-opacity-50" required placeholder="Ingresá la clave para aplicar los cambios">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 bg-light p-4 pt-0">
+                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4 fw-bold" data-bs-toggle="modal" data-bs-target="#modalDescIncidente{{ incidente.id }}" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary rounded-pill px-4 fw-bold shadow-sm">Guardar Actualización</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
