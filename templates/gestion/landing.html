@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}SecManager - Control Total de Activos e Incidentes{% endblock %}
 
@@ -127,16 +128,7 @@
 
     <div class="col-lg-6">
             <div class="img-placeholder-box">
-                <!-- 
-                    PARA AGREGAR TU IMAGEN:
-                    Reemplazá el bloque <div> interno por tu etiqueta <img>, por ejemplo:
-                    <img src="/static/img/activos-demo.png" class="img-fluid rounded-4 shadow" alt="Demo Activos">
-                -->
-                <div class="text-center p-4">
-                    <span class="fs-1 mb-2 d-block">🖥️</span>
-                    <h5 class="fw-bold mb-1">Imagen de Inventario de Activos</h5>
-                    <small class="opacity-75">Insertá aquí la captura del módulo de activos</small>
-                </div>
+                <img src="{% static 'img/planilla_activos.webp' %}" alt="Imagen de Servidor" class="img-fluid rounded-4 shadow-lg">
             </div>
         </div>
 
@@ -162,16 +154,7 @@
 
         <div class="col-lg-6">
             <div class="img-placeholder-box img-placeholder-box-dark">
-                <!-- 
-                    PARA AGREGAR TU IMAGEN:
-                    Reemplazá el bloque <div> interno por tu etiqueta <img>:
-                    <img src="/static/img/incidentes-demo.png" class="img-fluid rounded-4 shadow" alt="Demo Incidentes">
-                -->
-                <div class="text-center p-4">
-                    <span class="fs-1 mb-2 d-block">🚨</span>
-                    <h5 class="fw-bold mb-1">Imagen de Registro de Incidentes</h5>
-                    <small class="opacity-75">Insertá aquí la captura del módulo de incidentes</small>
-                </div>
+                    <img src="{% static 'img/planilla_incidentes.webp' %}" alt="Imagen de Servidor" class="img-fluid rounded-4 shadow-lg">
             </div>
         </div>
     </div>
@@ -185,25 +168,17 @@
             </span>
             <h2 class="font-syne fw-bold display-5 mb-3">Métricas e Indicadores en Vivo</h2>
             <p class="fs-5 opacity-90 mb-4">
-                Visualizá el estado general de tu ciberseguridad a través de indicadores analíticos en tiempo real.
+                Monitoreá el estado de tu infraestructura a través de un panel de control simple y en tiempo real.
             </p>
             <ul class="list-unstyled fs-6 mb-0">
-                <li class="mb-2">📈 Tableros dinámicos de vulnerabilidades pendientes vs. resueltas.</li>
-                <li class="mb-2">📈 Métricas instantáneas para la toma de decisiones estratégicas.</li>
-                <li class="mb-2">📈 Reportes claros para auditorías e informes gerenciales.</li>
+                <li class="mb-2">📈 Comparativa visual entre tus activos totales y los incidentes reportados.</li>
+                <li class="mb-2">📈 Seguimiento instantáneo de estados (Abiertos, En Investigación, Resueltos y Cerrados).</li>
+                <li class="mb-2">📈 Resumen claro para priorizar la atención y mejorar los tiempos de respuesta.</li>
             </ul>
         </div>
         <div class="col-lg-6">
             <div class="img-placeholder-box">
-                <!-- 
-                    PARA AGREGAR TU IMAGEN:
-                    Reemplazá el bloque <div> interno por tu etiqueta <img>:
-                    <img src="/static/img/metricas-demo.png" class="img-fluid rounded-4 shadow" alt="Demo Métricas">
-                -->
-                <div class="text-center p-4">
-                    <span class="fs-1 mb-2 d-block">📊</span>
-                    <h5 class="fw-bold mb-1">Imagen de Métricas en Vivo</h5>
-                    <small class="opacity-75">Insertá aquí la captura del dashboard de métricas</small>
+                <img src="{% static 'img/gráfico_barra.webp' %}" alt="Imagen de Servidor" class="img-fluid rounded-4 shadow-lg">
                 </div>
             </div>
         </div>

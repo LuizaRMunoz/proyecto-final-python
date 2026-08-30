@@ -3,46 +3,122 @@
 {% block title %}Inicio - Dashboard{% endblock %}
 
 {% block content %}
+
+<style>
+    /* Efecto de elevación para las tarjetas del dashboard */
+    .dash-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .dash-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.15) !important;
+    }
+</style>
+
 <!-- Bienvenida -->
-<div class="p-4 mb-4 bg-white rounded-3 shadow-sm border">
-    <div class="container-fluid py-2">
-        <h1 class="display-6 fw-bold">🛡️ Panel de Control</h1>
-        <p class="col-md-8 fs-5 text-muted mb-0">
-            Bienvenido/a, <strong>{{ user.get_full_name|default:user.username }}</strong>. Sistema centralizado de gestión de activos e incidentes de seguridad.
-        </p>
+<div class="text-center py-5 mb-5 rounded-4 shadow position-relative overflow-hidden" style="background-color: #092328;">
+    <h1 class="display-5 fw-bold font-syne mb-2 text-white">
+        Panel de <span style="color: #EBE3A7;">Control</span>
+    </h1>
+    <p class="fs-5 text-white-50 mb-0 col-md-8 mx-auto px-3">
+        Bienvenido/a, <strong class="text-white">{{ user.get_full_name|default:user.username }}</strong>. 
+        Este es tu resumen centralizado de gestión de activos e incidentes.
+    </p>
+</div>
+
+<!-- Tarjeta de Activo -->
+<div class="row g-4 mb-5">
+<div class="col-md-6">
+        <div class="card border-0 shadow rounded-4 h-100 dash-card" style="background-color: #2A835F; color: white;">
+            <div class="card-body p-4 d-flex justify-content-between align-items-center">
+                <div>
+                    <h6 class="text-uppercase fw-bold opacity-75 mb-1 tracking-wide">Total Activos</h6>
+                    <h2 class="display-3 fw-bold font-syne mb-0">{{ total_activos|default:"0" }}</h2>
+                </div>
+                <div class="fs-1 opacity-50">🖥️</div>
+            </div>
+            <div class="card-footer border-0 bg-transparent px-4 pb-4">
+                <a href="{% url 'lista_activos' %}" class="btn btn-light fw-bold rounded-pill text-dark w-100">
+                    Administrar Inventario →
+                </a>
+            </div>
+        </div>
+    </div>
+
+<!-- Tarjeta de Incidentes -->
+    <div class="col-md-6">
+        <div class="card border-0 shadow rounded-4 h-100 dash-card" style="background-color: #740A03; color: white;">
+            <div class="card-body p-4 d-flex justify-content-between align-items-center">
+                <div>
+                    <h6 class="text-uppercase fw-bold opacity-75 mb-1 tracking-wide">Total Incidentes</h6>
+                    <h2 class="display-3 fw-bold font-syne mb-0">{{ total_incidentes|default:"0" }}</h2>
+                </div>
+                <div class="fs-1 opacity-50">🚨</div>
+            </div>
+            <div class="card-footer border-0 bg-transparent px-4 pb-4">
+                <a href="{% url 'lista_incidentes' %}" class="btn btn-light fw-bold rounded-pill text-dark w-100">
+                    Ver Reportes →
+                </a>
+            </div>
+        </div>
     </div>
 </div>
 
-<!-- Tarjetas de Métricas -->
-<div class="row g-4 mb-4">
-    <div class="col-md-4">
-        <div class="card border-0 shadow-sm bg-primary text-white h-100">
-            <div class="card-body">
-                <h6 class="card-title text-uppercase fw-bold text-white-50">Total Activos</h6>
-                <h2 class="display-4 fw-bold my-2">{{ total_activos }}</h2>
-                <a href="{% url 'lista_activos' %}" class="btn btn-sm btn-light mt-2 text-primary fw-bold">Ver Inventario →</a>
-            </div>
-        </div>
+<!-- Panel de gráficos en vivo -->
+<div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4 bg-white">
+    <div class="card-header bg-white border-0 pt-4 pb-0 px-4">
+        <h4 class="font-syne fw-bold mb-0" style="color: #2E2910;">Relación Global: Activos vs. Incidentes</h4>
+        <p class="text-muted small">Comparativa en tiempo real de tu base de datos</p>
     </div>
-
-    <div class="col-md-4">
-        <div class="card border-0 shadow-sm bg-danger text-white h-100">
-            <div class="card-body">
-                <h6 class="card-title text-uppercase fw-bold text-white-50">Total Incidentes</h6>
-                <h2 class="display-4 fw-bold my-2">{{ total_incidentes }}</h2>
-                <a href="{% url 'lista_incidentes' %}" class="btn btn-sm btn-light mt-2 text-danger fw-bold">Ver Reportes →</a>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-4">
-        <div class="card border-0 shadow-sm bg-dark text-white h-100">
-            <div class="card-body">
-                <h6 class="card-title text-uppercase fw-bold text-white-50">Mi Cuenta</h6>
-                <p class="small text-white-50 mb-3">Gestioná tus datos personales e imagen de perfil.</p>
-                <a href="{% url 'perfil' %}" class="btn btn-sm btn-outline-light mt-2 fw-bold">Ir a Mi Perfil 👤</a>
-            </div>
+    <div class="card-body p-4">
+        <!-- Contenedor del Canvas para el Gráfico -->
+        <div class="bg-white p-4 rounded-4 shadow-sm border mt-4">
+            <h5 class="font-syne fw-bold mb-4 text-center" style="color: #12544F;">Relación de Activos vs Estado de Incidentes</h5>
+            <canvas id="relacionChart"></canvas>
         </div>
     </div>
 </div>
+<!-- Se importa Chart.js desde CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('relacionChart').getContext('2d');
+    
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Activos Totales', '🚨 Abiertos', '🔍 En Investigación', '🛠️ Resueltos', '✅ Cerrados'],
+            datasets: [{
+                label: 'Cantidad',
+                data: [
+                    Number("{{ total_activos|default:0 }}"), 
+                    Number("{{ incidentes_abiertos|default:0 }}"), 
+                    Number("{{ incidentes_investigacion|default:0 }}"), 
+                    Number("{{ incidentes_resueltos|default:0 }}"),
+                    Number("{{ incidentes_cerrados|default:0 }}")
+                ],
+                backgroundColor: [
+                    '#2E2910', // Marrón oscuro para los activos
+                    '#6c757d', // Gris para abiertos 
+                    '#0d6efd', // Azul para investigación 
+                    '#198754', // Verde para resueltos 
+                    '#e2e3e5'  // Gris clarito para cerrados 
+                ],
+                borderWidth: 0,
+                borderRadius: 8 // Bordes redondeaditos
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false } // Ocultamos la leyenda
+            },
+            scales: {
+                y: { 
+                    beginAtZero: true,
+                    ticks: { precision: 0 } // Para que no muestre decimales (ej: 1.5 activos)
+                }
+            }
+        }
+    });
+</script>
 {% endblock %}

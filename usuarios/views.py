@@ -42,3 +42,14 @@ def perfil(request):
         'user_form': user_form,
         'perfil_form': perfil_form
     })
+
+@login_required
+def eliminar_cuenta(request):
+    if request.method == 'POST':
+        user = request.user
+        user.delete()  # Esto borra al User y a su Perfil (gracias al cascade)
+        messages.success(request, 'Tu cuenta ha sido eliminada correctamente.')
+        return redirect('login')  # Lo mandamos a la pantalla de login
+    
+    # Si alguien intenta entrar por la URL directo, lo devolvemos al perfil
+    return redirect('perfil')

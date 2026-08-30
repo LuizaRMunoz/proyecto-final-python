@@ -7,4 +7,5 @@ urlpatterns = [
     path('login/', auth_views.LoginView.as_view(template_name='usuarios/login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(next_page='home'), name='logout'),
     path('perfil/', views.perfil, name='perfil'),
+    path('perfil/eliminar/', views.eliminar_cuenta, name='eliminar_cuenta'),
 ]

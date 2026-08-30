@@ -28,7 +28,7 @@ class Activo(models.Model):
         ordering = ['-fecha_registro']
 
     def __str__(self):
-        return f"{self.nombre} ({self.get_tipo_display()}) - Criticidad: {self.criticidad}"
+        return f"{self.nombre} ({self.get_tipo_display()}) - Criticidad: {self.get_criticidad_display()}"
 
 class Incidente(models.Model):
     NIVELES_SEVERIDAD = [

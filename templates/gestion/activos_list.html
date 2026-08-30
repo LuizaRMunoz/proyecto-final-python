@@ -3,19 +3,93 @@
 {% block title %}Inventario de Activos{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <h2>Inventario de Activos</h2>
-    <!-- Botón que abre el Modal -->
-    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalActivo">
+
+<style>
+    /* Estilos personalizados para la tabla */
+    .table-custom th {
+        background-color: #12544F !important;
+        color: #EBE3A7 !important;
+        font-family: 'Syne', sans-serif;
+        font-size: 0.9rem;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        border-bottom: none;
+        padding: 1rem;
+    }
+    .table-custom td {
+        vertical-align: middle;
+        color: #4a4a4a;
+        padding: 1rem;
+        border-bottom: 1px solid #f0f0f0;
+    }
+    .table-custom tbody tr {
+        transition: background-color 0.2s ease;
+    }
+    .table-custom tbody tr:hover {
+        background-color: #f8f9fa;
+    }
+
+    /* Estilos del Botón Principal */
+    .btn-activos {
+        background-color: #2A835F;
+        color: white;
+        transition: all 0.3s ease;
+    }
+    .btn-activos:hover {
+        background-color: #1e6146;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(42, 131, 95, 0.3);
+    }
+
+    /* Truco para estilizar el formulario de Django por defecto */
+    .django-form-styled p {
+        margin-bottom: 1rem;
+    }
+    .django-form-styled label {
+        font-weight: 600;
+        color: #2E2910;
+        margin-bottom: 0.4rem;
+        display: block;
+        font-size: 0.9rem;
+    }
+    .django-form-styled input, 
+    .django-form-styled select, 
+    .django-form-styled textarea {
+        display: block;
+        width: 100%;
+        padding: 0.6rem 1rem;
+        font-size: 1rem;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        color: #212529;
+        background-color: #fff;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+    .django-form-styled input:focus, 
+    .django-form-styled select:focus {
+        border-color: #2A835F;
+        outline: 0;
+        box-shadow: 0 0 0 0.25rem rgba(42, 131, 95, 0.25);
+    }
+</style>
+
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end mb-4 gap-3">
+    <div>
+        <h2 class="font-syne fw-bold mb-1" style="color: #2E2910;">Inventario de Activos</h2>
+        <p class="text-muted mb-0">Gestioná y clasificá la infraestructura de tu organización.</p>
+    </div>
+    <button type="button" class="btn btn-activos rounded-pill px-4 py-2 fw-bold" data-bs-toggle="modal" data-bs-target="#modalActivo">
         + Nuevo Activo
     </button>
 </div>
 
 <!-- Tabla de Activos -->
-<div class="card shadow-sm">
-    <div class="card-body p-0">
-        <table class="table table-striped table-hover mb-0">
-            <thead class="table-dark">
+<div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-5">
+    <div class="card-body p-0 table-responsive">
+        <table class="table mb-0 table-custom">
+            <thead>
                 <tr>
                     <th>Nombre</th>
                     <th>Tipo</th>
@@ -27,16 +101,34 @@
             <tbody>
                 {% for activo in activos %}
                     <tr>
-                        <td><strong>{{ activo.nombre }}</strong></td>
-                        <td>{{ activo.get_tipo_display }}</td>
-                        <td>{{ activo.get_criticidad_display }}</td>
-                        <td>{{ activo.ubicacion_ip }}</td>
-                        <td>{{ activo.fecha_registro|date:"d/m/Y H:i" }}</td>
+                        <td>
+                            <a href="#" data-bs-toggle="modal" data-bs-target="#modalDescActivo{{ activo.id }}" class="text-decoration-none">
+                                <strong style="color: #2A835F; border-bottom: 1px dashed #2A835F;">{{ activo.nombre }}</strong>
+                                <span class="opacity-50 small ms-1">🔍</span>
+                            </a>
+                        </td>
+                        <td>
+                            <span class="text-muted fw-medium">{{ activo.get_tipo_display }}</span>
+                        </td>
+                        <td>
+                            <!-- Lógica para pintar las etiquetas (Badges) según criticidad -->
+                            {% if activo.get_criticidad_display == 'Alta' %}
+                                <span class="badge bg-danger rounded-pill px-3 py-2 shadow-sm"> {{ activo.get_criticidad_display }}</span>
+                            {% elif activo.get_criticidad_display == 'Media' %}
+                                <span class="badge bg-warning text-dark rounded-pill px-3 py-2 shadow-sm"> {{ activo.get_criticidad_display }}</span>
+                            {% else %}
+                                <span class="badge bg-success rounded-pill px-3 py-2 shadow-sm"> {{ activo.get_criticidad_display }}</span>
+                            {% endif %}
+                        </td>
+                        <td><span class="font-monospace text-secondary">{{ activo.ubicacion_ip }}</span></td>
+                        <td class="text-muted">{{ activo.fecha_registro|date:"d/m/Y H:i" }}</td>
                     </tr>
                 {% empty %}
                     <tr>
-                        <td colspan="5" class="text-center text-muted py-4">
-                            No hay activos registrados todavía.
+                        <td colspan="5" class="text-center py-5">
+                            <div class="opacity-50 mb-3" style="font-size: 3rem;"></div>
+                            <h5 class="fw-bold text-muted">No hay activos registrados</h5>
+                            <p class="text-muted mb-0">Hacé clic en "+ Nuevo Activo" para empezar.</p>
                         </td>
                     </tr>
                 {% endfor %}
@@ -44,26 +136,54 @@
         </table>
     </div>
 </div>
-
 <!-- Modal (Ventana emergente con el Formulario) -->
 <div class="modal fade" id="modalActivo" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header bg-success text-white">
-                <h5 class="modal-title">Registrar Nuevo Activo</h5>
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+            <div class="modal-header border-0 p-4" style="background-color: #2A835F;">
+                <h5 class="modal-title font-syne fw-bold text-white">Registrar Nuevo Activo</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+            
             <form method="POST">
-                <div class="modal-body">
+                <div class="modal-body p-4 bg-light django-form-styled">
                     {% csrf_token %}
                     {{ form.as_p }}
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-success">Guardar Activo</button>
+                <div class="modal-footer border-0 bg-light p-4 pt-0">
+                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4 fw-bold" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-activos rounded-pill px-4 fw-bold shadow-sm">Guardar Activo</button>
                 </div>
             </form>
+            
         </div>
     </div>
 </div>
+
+<!-- Modales de Descripción para Activos -->
+{% for activo in activos %}
+<div class="modal fade" id="modalDescActivo{{ activo.id }}" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+            <div class="modal-header border-0 p-4" style="background-color: #12544F;">
+                <h5 class="modal-title font-syne fw-bold text-white">Detalle del Activo</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4 bg-light">
+                <h4 class="fw-bold mb-3" style="color: #2E2910;">{{ activo.nombre }}</h4>
+                <div class="mb-3">
+                    <span class="badge bg-secondary rounded-pill">{{ activo.get_tipo_display }}</span>
+                    <span class="badge border border-secondary text-secondary rounded-pill">{{ activo.ubicacion_ip }}</span>
+                </div>
+                <h6 class="text-muted fw-bold mb-2 mt-4">Descripción detallada:</h6>
+                <!-- white-space: pre-line respeta los "Enter" que el usuario da al escribir -->
+                <p class="text-dark" style="white-space: pre-line;">{{ activo.descripcion|default:"No se proporcionó una descripción para este activo." }}</p>
+            </div>
+            <div class="modal-footer border-0 bg-light p-4 pt-0">
+                <button type="button" class="btn btn-outline-secondary rounded-pill px-4 fw-bold" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
 {% endblock %}

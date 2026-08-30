@@ -3,19 +3,93 @@
 {% block title %}Registro de Incidentes{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <h2>Registro de Incidentes</h2>
-    <!-- Botón que abre el Modal -->
-    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalIncidente">
+
+<style>
+    /* Estilos personalizados para la tabla */
+    .table-custom th {
+        background-color: #12544F !important;
+        color: #EBE3A7 !important;
+        font-family: 'Syne', sans-serif;
+        font-size: 0.9rem;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        border-bottom: none;
+        padding: 1rem;
+    }
+    .table-custom td {
+        vertical-align: middle;
+        color: #4a4a4a;
+        padding: 1rem;
+        border-bottom: 1px solid #f0f0f0;
+    }
+    .table-custom tbody tr {
+        transition: background-color 0.2s ease;
+    }
+    .table-custom tbody tr:hover {
+        background-color: #f8f9fa;
+    }
+
+    /* Estilos del Botón Principal */
+    .btn-activos {
+        background-color: #2A835F;
+        color: white;
+        transition: all 0.3s ease;
+    }
+    .btn-activos:hover {
+        background-color: #1e6146;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(42, 131, 95, 0.3);
+    }
+
+    /* Truco para estilizar el formulario de Django por defecto */
+    .django-form-styled p {
+        margin-bottom: 1rem;
+    }
+    .django-form-styled label {
+        font-weight: 600;
+        color: #2E2910;
+        margin-bottom: 0.4rem;
+        display: block;
+        font-size: 0.9rem;
+    }
+    .django-form-styled input, 
+    .django-form-styled select, 
+    .django-form-styled textarea {
+        display: block;
+        width: 100%;
+        padding: 0.6rem 1rem;
+        font-size: 1rem;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        color: #212529;
+        background-color: #fff;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+    .django-form-styled input:focus, 
+    .django-form-styled select:focus {
+        border-color: #2A835F;
+        outline: 0;
+        box-shadow: 0 0 0 0.25rem rgba(42, 131, 95, 0.25);
+    }
+</style>
+
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end mb-4 gap-3">
+    <div>
+        <h2 class="font-syne fw-bold mb-1" style="color: #2E2910;">Registro de Incidentes</h2>
+        <p class="text-muted mb-0">Gestioná y clasificá los incidentes reportados en tu organización.</p>
+    </div>
+    <button type="button" class="btn btn-activos rounded-pill px-4 py-2 fw-bold" data-bs-toggle="modal" data-bs-target="#modalIncidente">
         + Reportar Incidente
     </button>
 </div>
 
 <!-- Tabla de Incidentes -->
-<div class="card shadow-sm">
-    <div class="card-body p-0">
-        <table class="table table-striped table-hover mb-0">
-            <thead class="table-dark">
+<div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-5">
+    <div class="card-body p-0 table-responsive">
+        <table class="table mb-0 table-custom">
+            <thead>
                 <tr>
                     <th>Título</th>
                     <th>Activo Afectado</th>
@@ -25,18 +99,49 @@
                 </tr>
             </thead>
             <tbody>
-                {% for incidente in incidentes %}
+            {% for incidente in incidentes %}
                     <tr>
-                        <td><strong>{{ incidente.titulo }}</strong></td>
-                        <td>{{ incidente.activo_afectado.nombre }}</td>
-                        <td>{{ incidente.get_severidad_display }}</td>
-                        <td>{{ incidente.get_estado_display }}</td>
-                        <td>{{ incidente.fecha_reporte|date:"d/m/Y H:i" }}</td>
+                        <td>
+                                <a href="#" data-bs-toggle="modal" data-bs-target="#modalDescIncidente{{ incidente.id }}" class="text-decoration-none">
+                                    <strong style="color: #2A835F; border-bottom: 1px dashed #2A835F;">{{ incidente.titulo }}</strong>
+                                    <span class="opacity-50 small ms-1">🔍</span>
+                                </a>
+                        </td>
+                        <td>
+                            <span class="text-muted fw-medium">{{ incidente.activo_afectado }}</span>
+                        </td>
+                        <td>
+                            <!-- Lógica para color para SEVERIDAD -->
+                            {% if incidente.get_severidad_display == 'Crítico' %}
+                                <span class="badge bg-danger rounded-pill px-3 py-2 shadow-sm">{{ incidente.get_severidad_display }}</span>
+                            {% elif incidente.get_severidad_display == 'Alto' %}
+                                <span class="badge rounded-pill px-3 py-2 shadow-sm" style="background-color: #fd7e14; color: white;">{{ incidente.get_severidad_display }}</span>
+                            {% elif incidente.get_severidad_display == 'Medio' %}
+                                <span class="badge bg-warning text-dark rounded-pill px-3 py-2 shadow-sm">{{ incidente.get_severidad_display }}</span>
+                            {% else %}
+                                <span class="badge bg-success rounded-pill px-3 py-2 shadow-sm">{{ incidente.get_severidad_display }}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <!-- Lógica para color para ESTADO -->
+                            {% if incidente.get_estado_display == 'Abierto' %}
+                                <span class="badge bg-secondary rounded-pill px-3 py-2">{{ incidente.get_estado_display }}</span>
+                            {% elif incidente.get_estado_display == 'En Investigación' %}
+                                <span class="badge bg-primary rounded-pill px-3 py-2">{{ incidente.get_estado_display }}</span>
+                            {% elif incidente.get_estado_display == 'Resuelto' %}
+                                <span class="badge bg-success rounded-pill px-3 py-2">{{ incidente.get_estado_display }}</span>
+                            {% else %}
+                                <span class="badge bg-light text-muted border rounded-pill px-3 py-2">{{ incidente.get_estado_display }}</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-muted">{{ incidente.fecha_reporte|date:"d/m/Y H:i" }}</td>
                     </tr>
                 {% empty %}
                     <tr>
-                        <td colspan="5" class="text-center text-muted py-4">
-                            No hay incidentes reportados todavía.
+                        <td colspan="5" class="text-center py-5">
+                            <div class="opacity-50 mb-3" style="font-size: 3rem;"></div>
+                            <h5 class="fw-bold text-muted">No hay incidentes reportados</h5>
+                            <p class="text-muted mb-0">¡Excelente noticia! Todo parece estar en orden.</p>
                         </td>
                     </tr>
                 {% endfor %}
@@ -47,23 +152,65 @@
 
 <!-- Modal (Ventana emergente con el Formulario) -->
 <div class="modal fade" id="modalIncidente" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header bg-danger text-white">
-                <h5 class="modal-title">Reportar Nuevo Incidente</h5>
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+            <!-- Usamos el marrón oscuro de tu paleta para diferenciarlo de Activos -->
+            <div class="modal-header border-0 p-4" style="background-color: #2A835F;">
+                <h5 class="modal-title font-syne fw-bold text-white">Registrar Nuevo Incidente</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+            
             <form method="POST">
-                <div class="modal-body">
+                <div class="modal-body p-4 bg-light django-form-styled">
                     {% csrf_token %}
                     {{ form.as_p }}
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-danger">Guardar Incidente</button>
+                <div class="modal-footer border-0 bg-light p-4 pt-0">
+                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4 fw-bold" data-bs-dismiss="modal">Cancelar</button>
+                    <!-- Mantenemos el botón verde para la acción de guardar -->
+                    <button type="submit" class="btn rounded-pill px-4 fw-bold shadow-sm" style="background-color: #2A835F; color: white;">Guardar Reporte</button>
                 </div>
             </form>
+            
         </div>
     </div>
 </div>
+
+<!-- Modales de Descripción para Incidentes -->
+{% for incidente in incidentes %}
+<div class="modal fade" id="modalDescIncidente{{ incidente.id }}" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg"> <!-- modal-lg lo hace un poco más ancho -->
+        <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+            <div class="modal-header border-0 p-4" style="background-color: #12544F;">
+                <h5 class="modal-title font-syne fw-bold text-white">Reporte de Incidente</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4 p-md-5 bg-light">
+                <h3 class="fw-bold mb-4" style="color: #2E2910;">{{ incidente.titulo }}</h3>
+                
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <p class="text-muted mb-1 small text-uppercase fw-bold">Activo Afectado</p>
+                        <p class="fs-5">{{ incidente.activo_afectado }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="text-muted mb-1 small text-uppercase fw-bold">Fecha de Reporte</p>
+                        <p class="fs-5">{{ incidente.fecha_reporte|date:"d/m/Y H:i" }}</p>
+                    </div>
+                </div>
+
+                <hr class="opacity-25 mb-4">
+
+                <h6 class="text-muted fw-bold mb-3 text-uppercase">Descripción de lo ocurrido:</h6>
+                <div class="bg-white p-4 rounded-3 shadow-sm border">
+                    <p class="text-dark mb-0" style="white-space: pre-line; font-size: 1.05rem;">{{ incidente.descripcion|default:"No hay detalles adicionales registrados." }}</p>
+                </div>
+            </div>
+            <div class="modal-footer border-0 bg-light p-4 pt-0">
+                <button type="button" class="btn btn-outline-secondary rounded-pill px-4 fw-bold" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
 {% endblock %}

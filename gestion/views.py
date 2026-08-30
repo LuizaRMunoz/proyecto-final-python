@@ -11,11 +11,17 @@ def home(request):
         total_activos = Activo.objects.count()
         total_incidentes = Incidente.objects.count()
         incidentes_abiertos = Incidente.objects.filter(estado='Abierto').count()
+        incidentes_en_investigacion = Incidente.objects.filter(estado='En Investigación').count() 
+        incidentes_resueltos = Incidente.objects.filter(estado='Resuelto').count()
+        incidentes_cerrados = Incidente.objects.filter(estado='Cerrado').count()
 
         context = {
             'total_activos': total_activos,
             'total_incidentes': total_incidentes,
             'incidentes_abiertos': incidentes_abiertos,
+            'incidentes_en_investigacion': incidentes_en_investigacion,
+            'incidentes_resueltos': incidentes_resueltos,
+            'incidentes_cerrados': incidentes_cerrados,
         }
         return render(request, 'gestion/home.html', context)
     else:
