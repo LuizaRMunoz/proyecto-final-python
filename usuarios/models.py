@@ -5,7 +5,6 @@ from django.contrib.auth.models import User
 class Perfil(models.Model):
 
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='perfil')
-    departamento = models.CharField(max_length=100, blank=True, verbose_name="Departamento o Área")
     bio = models.TextField(blank=True, verbose_name="Biografía o Notas")
     avatar = models.ImageField(upload_to='avatares/', null=True, blank=True)
 

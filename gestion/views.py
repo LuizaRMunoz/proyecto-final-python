@@ -45,23 +45,6 @@ def lista_activos(request):
     return render(request, 'gestion/activos_list.html', {'activos': activos, 'form': form})
 
 @login_required
-def eliminar_activo(request, id):
-    # Buscamos el activo por su ID
-    activo = get_object_or_404(Activo, id=id)
-    
-    if request.method == 'POST':
-        password = request.POST.get('password_admin')
-        
-        # Usamos una contraseña fija para el proyecto por ahora
-        if password == 'admin123': 
-            activo.delete()
-            messages.success(request, '¡Activo eliminado correctamente!')
-        else:
-            messages.error(request, 'Contraseña incorrecta. Operación cancelada.')
-            
-    return redirect('lista_activos')
-
-@login_required
 def editar_activo(request, id):
     activo = get_object_or_404(Activo, id=id)
     
