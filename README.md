@@ -26,7 +26,7 @@ Sigue estos pasos para levantar el proyecto en tu entorno local:
 
 1. **Clonar el repositorio:**
    ```bash
-   git clone [[Proyecto_Final]](https://github.com/LuizaRMunoz/proyecto-final-python.git)
+   git clone https://github.com/LuizaRMunoz/proyecto-final-python.git
    cd proyecto-final-python
 
 2. **Crear y activar entorno virtual:**
