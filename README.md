@@ -56,5 +56,5 @@ Para poder probar el ciclo completo de la herramienta (como la edición de activ
 *(En un entorno de producción real, esto estaría conectado a un sistema de gestión de contraseñas o variables de entorno).*
 
 ### 🌐 Acceso Público con PythonAnywhere
-La aplicación se encuentra desplegada y operativa en la siguiente URL permanente: 
+La aplicación se encuentra desplegada y operativa en la siguiente URL permanente (hasta 30/09/2026): 
 https://luizarangel.pythonanywhere.com/
