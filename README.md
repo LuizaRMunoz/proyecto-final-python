@@ -55,13 +55,6 @@ Para poder probar el ciclo completo de la herramienta (como la edición de activ
 * **Contraseña requerida para probar las modificaciones:** `admin123`
 *(En un entorno de producción real, esto estaría conectado a un sistema de gestión de contraseñas o variables de entorno).*
 
-### 🌐 Acceso Público (Túnel con Ngrok)
-El proyecto está configurado para aceptar conexiones externas (`ALLOWED_HOSTS = ['*']`).
-
-Puedes utilizar **ngrok** para generar una URL pública:
-1. Instala **ngrok** (disponible en su web oficial).
-2. Configura tu token de autenticación:
-   `ngrok config add-authtoken <TU_TOKEN>`
-3. Con el servidor de Django corriendo en el puerto 8000, abre una nueva terminal y ejecuta:
-   `ngrok http 8000`
-4. Copia la URL generada (`https://....ngrok-free.app`) y úsala en cualquier navegador.
+### 🌐 Acceso Público con PythonAnywhere
+La aplicación se encuentra desplegada y operativa en la siguiente URL permanente: 
+https://luizarangel.pythonanywhere.com/
