@@ -86,13 +86,13 @@
     new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ['Activos Totales', '🚨 Abiertos', '🔍 En Investigación', '🛠️ Resueltos', '✅ Cerrados'],
+            labels: ['Activos Totales', 'Abiertos', 'En Investigación', 'Resueltos', 'Cerrados'],
             datasets: [{
                 label: 'Cantidad',
                 data: [
                     Number("{{ total_activos|default:0 }}"), 
                     Number("{{ incidentes_abiertos|default:0 }}"), 
-                    Number("{{ incidentes_investigacion|default:0 }}"), 
+                    Number("{{ incidentes_en_investigacion|default:0 }}"), 
                     Number("{{ incidentes_resueltos|default:0 }}"),
                     Number("{{ incidentes_cerrados|default:0 }}")
                 ],
